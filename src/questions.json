@@ -1,0 +1,17 @@
+[
+    {
+        "question": "What is the capital of France?",
+        "answers": ["Paris", "London", "Berlin", "Madrid"],
+        "correct": "Paris"
+    },
+    {
+        "question": "What is 2 + 2?",
+        "answers": ["3", "4", "5", "6"],
+        "correct": "4"
+    },
+    {
+        "question": "What is a function?",
+        "answers": ["A function is a block of code that performs a specific task", "A function is a variable", "A function is a string", "A function is a number"],
+        "correct": "A function is a block of code that performs a specific task"
+    }
+]
