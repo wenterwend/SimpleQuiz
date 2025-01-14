@@ -1,60 +1,72 @@
 // app.js
 
-const questions = [
-    {
-        question: "What is the capital of France?",
-        options: ["Berlin", "Madrid", "Paris", "Lisbon"],
-        answer: "Paris"
-    },
-    {
-        question: "What is 2 + 2?",
-        options: ["3", "4", "5", "6"],
-        answer: "4"
-    },
-    {
-        question: "What is the largest planet in our solar system?",
-        options: ["Earth", "Mars", "Jupiter", "Saturn"],
-        answer: "Jupiter"
-    }
-];
+const quizContainer = document.getElementById('quiz-container');
+const questionElement = document.getElementById('question');
+const answersElement = document.getElementById('answers');
+const feedbackElement = document.getElementById('feedback');
+const scoreElement = document.getElementById('score');
+const nextButton = document.getElementById('next-button');
 
+let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 
-function displayQuestion() {
-    const questionContainer = document.getElementById("question-container");
-    const question = questions[currentQuestionIndex];
-    
-    questionContainer.innerHTML = `
-        <h2>${question.question}</h2>
-        <ul id="options-list"></ul>
-    `;
-    
-    const optionsList = document.getElementById("options-list");
-    question.options.forEach(option => {
-        const li = document.createElement("li");
-        li.textContent = option;
-        li.addEventListener("click", () => selectOption(option));
-        optionsList.appendChild(li);
+async function loadQuestions() {
+    const response = await fetch('questions.json');
+    questions = await response.json();
+    showQuestion();
+}
+
+function showQuestion() {
+    const currentQuestion = questions[currentQuestionIndex];
+    questionElement.textContent = currentQuestion.question;
+    answersElement.innerHTML = '';
+    feedbackElement.textContent = '';
+    currentQuestion.answers.forEach(answer => {
+        const button = document.createElement('button');
+        button.textContent = answer;
+        button.addEventListener('click', () => selectAnswer(answer));
+        answersElement.appendChild(button);
     });
 }
 
-function selectOption(selectedOption) {
-    const question = questions[currentQuestionIndex];
-    if (selectedOption === question.answer) {
-        score++;
+function selectAnswer(answer) {
+    const currentQuestion = questions[currentQuestionIndex];
+    if (answer === currentQuestion.correct) {
+        feedbackElement.textContent = 'Correct!';
+        updateScore();
+    } else {
+        feedbackElement.textContent = 'Wrong!';
     }
+    nextButton.classList.remove('hidden');
+}
+
+function updateScore() {
+    // Stub function for updating the score
+}
+
+nextButton.addEventListener('click', () => {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
-        displayQuestion();
+        showQuestion();
+        nextButton.classList.add('hidden');
     } else {
-        displayScore();
+        questionElement.textContent = 'Quiz Completed!';
+        answersElement.innerHTML = '';
+        feedbackElement.textContent = '';
+        nextButton.textContent = 'Restart Quiz';
+        nextButton.classList.remove('hidden');
+        nextButton.addEventListener('click', resetGame);
     }
+});
+
+function resetGame() {
+    currentQuestionIndex = 0;
+    score = 0;
+    scoreElement.textContent = 'Score: 0';
+    nextButton.textContent = 'Next Question';
+    nextButton.classList.add('hidden');
+    showQuestion();
 }
 
-function displayScore() {
-    const questionContainer = document.getElementById("question-container");
-    questionContainer.innerHTML = `<h2>Your score: ${score} out of ${questions.length}</h2>`;
-}
-
-document.addEventListener("DOMContentLoaded", displayQuestion);
+loadQuestions();
