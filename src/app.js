@@ -10,11 +10,27 @@ const nextButton = document.getElementById('next-button');
 let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
+let useServer = false;
 
 async function loadQuestions() {
-    const response = await fetch('questions.json');
-    questions = await response.json();
-    showQuestion();
+    if (useServer) {
+        const response = await fetch('questions.json');
+        questions = await response.json();
+        showQuestion();
+    } else {
+        questions = [
+            {
+                question: "What is the capital of France?",
+                answers: ["Paris", "London", "Berlin", "Madrid"],
+                correct: "Paris"
+            },
+            {
+                question: "What is 2 + 2?",
+                answers: ["3", "4", "5", "6"],
+                correct: "4"
+            }
+];
+    }
 }
 
 function showQuestion() {
@@ -42,7 +58,8 @@ function selectAnswer(answer) {
 }
 
 function updateScore() {
-    // Stub function for updating the score
+    score++;
+    scoreElement.textContent = `Score: ${score}`;
 }
 
 nextButton.addEventListener('click', () => {
