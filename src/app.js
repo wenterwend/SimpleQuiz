@@ -7,31 +7,21 @@ const feedbackElement = document.getElementById('feedback');
 const scoreElement = document.getElementById('score');
 const nextButton = document.getElementById('next-button');
 
-let questions = [];
+const questions = [
+    {
+        question: "What is the capital of France?",
+        answers: ["Paris", "London", "Berlin", "Madrid"],
+        correct: "Paris"
+    },
+    {
+        question: "What is 2 + 2?",
+        answers: ["3", "4", "5", "6"],
+        correct: "4"
+    }
+];
+
 let currentQuestionIndex = 0;
 let score = 0;
-let useServer = false;
-
-async function loadQuestions() {
-    if (useServer) {
-        const response = await fetch('questions.json');
-        questions = await response.json();
-        showQuestion();
-    } else {
-        questions = [
-            {
-                question: "What is the capital of France?",
-                answers: ["Paris", "London", "Berlin", "Madrid"],
-                correct: "Paris"
-            },
-            {
-                question: "What is 2 + 2?",
-                answers: ["3", "4", "5", "6"],
-                correct: "4"
-            }
-];
-    }
-}
 
 function showQuestion() {
     const currentQuestion = questions[currentQuestionIndex];
@@ -63,17 +53,20 @@ function updateScore() {
 }
 
 nextButton.addEventListener('click', () => {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-        showQuestion();
-        nextButton.classList.add('hidden');
+    if (nextButton.textContent === 'Restart Quiz') {
+        resetGame();
     } else {
-        questionElement.textContent = 'Quiz Completed!';
-        answersElement.innerHTML = '';
-        feedbackElement.textContent = '';
-        nextButton.textContent = 'Restart Quiz';
-        nextButton.classList.remove('hidden');
-        nextButton.addEventListener('click', resetGame);
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            showQuestion();
+            nextButton.classList.add('hidden');
+        } else {
+            questionElement.textContent = 'Quiz Completed!';
+            answersElement.innerHTML = '';
+            feedbackElement.textContent = '';
+            nextButton.textContent = 'Restart Quiz';
+            nextButton.classList.remove('hidden');
+        }
     }
 });
 
@@ -86,4 +79,4 @@ function resetGame() {
     showQuestion();
 }
 
-loadQuestions();
+showQuestion();
