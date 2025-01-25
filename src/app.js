@@ -5,6 +5,7 @@ const questionElement = document.getElementById('question');
 const answersElement = document.getElementById('answers');
 const feedbackElement = document.getElementById('feedback');
 const scoreElement = document.getElementById('score');
+const timerElement = document.getElementById('timer');
 const nextButton = document.getElementById('next-button');
 
 const questions = [
@@ -22,6 +23,8 @@ const questions = [
 
 let currentQuestionIndex = 0;
 let score = 0;
+let timer;
+let timeLeft = 10;
 
 function showQuestion() {
     const currentQuestion = questions[currentQuestionIndex];
@@ -34,6 +37,7 @@ function showQuestion() {
         button.addEventListener('click', () => selectAnswer(answer));
         answersElement.appendChild(button);
     });
+    startTimer();
 }
 
 function selectAnswer(answer) {
@@ -45,11 +49,26 @@ function selectAnswer(answer) {
         feedbackElement.textContent = 'Wrong!';
     }
     nextButton.classList.remove('hidden');
+    clearInterval(timer);
 }
 
 function updateScore() {
     score++;
     scoreElement.textContent = `Score: ${score}`;
+}
+
+function startTimer() {
+    timeLeft = 10;
+    timerElement.textContent = `Time left: ${timeLeft}`;
+    timer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = `Time left: ${timeLeft}`;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            feedbackElement.textContent = 'Time\'s up!';
+            nextButton.classList.remove('hidden');
+        }
+    }, 1000);
 }
 
 nextButton.addEventListener('click', () => {
