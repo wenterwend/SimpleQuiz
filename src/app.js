@@ -25,12 +25,14 @@ let currentQuestionIndex = 0;
 let score = 0;
 let timer;
 let timeLeft = 10;
+let questionAnswered = false;
 
 function showQuestion() {
     const currentQuestion = questions[currentQuestionIndex];
     questionElement.textContent = currentQuestion.question;
     answersElement.innerHTML = '';
     feedbackElement.textContent = '';
+    questionAnswered = false;
     currentQuestion.answers.forEach(answer => {
         const button = document.createElement('button');
         button.textContent = answer;
@@ -41,6 +43,8 @@ function showQuestion() {
 }
 
 function selectAnswer(answer) {
+    if (questionAnswered) return;
+    questionAnswered = true;
     const currentQuestion = questions[currentQuestionIndex];
     if (answer === currentQuestion.correct) {
         feedbackElement.textContent = 'Correct!';
@@ -67,6 +71,7 @@ function startTimer() {
             clearInterval(timer);
             feedbackElement.textContent = 'Time\'s up!';
             nextButton.classList.remove('hidden');
+            questionAnswered = true;
         }
     }, 1000);
 }
