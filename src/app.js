@@ -18,6 +18,12 @@ const questions = [
         question: "What is 2 + 2?",
         answers: ["3", "4", "5", "6"],
         correct: "4"
+    },
+    {
+        question: "Identify the image",
+        answers: ["Mr. June", "Mr. Yarnall", "Sibidi Toilet", "George Washington"],
+        correct: "Skibidi Toilet",
+        image: "../images/skibidi.png" // Add the path to the image
     }
 ];
 
@@ -33,6 +39,14 @@ function showQuestion() {
     answersElement.innerHTML = '';
     feedbackElement.textContent = '';
     questionAnswered = false;
+
+    if (currentQuestion.image) {
+        const img = document.createElement('img');
+        img.src = currentQuestion.image;
+        img.alt = currentQuestion.question;
+        questionElement.appendChild(img);
+    }
+
     currentQuestion.answers.forEach(answer => {
         const button = document.createElement('button');
         button.textContent = answer;
