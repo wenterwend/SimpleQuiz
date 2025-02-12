@@ -21,7 +21,7 @@ const questions = [
     },
     {
         question: "Identify the image",
-        answers: ["Mr. June", "Mr. Yarnall", "Sibidi Toilet", "George Washington"],
+        answers: ["Mr. June", "Mr. Yarnall", "Skibidi Toilet", "George Washington"],
         correct: "Skibidi Toilet",
         image: "../images/skibidi.png" // Add the path to the image
     }
