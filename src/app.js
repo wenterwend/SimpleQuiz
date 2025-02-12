@@ -1,12 +1,18 @@
 // app.js
 
+const loginContainer = document.getElementById('login-container');
 const quizContainer = document.getElementById('quiz-container');
+const leaderboardContainer = document.getElementById('leaderboard-container');
+const usernameInput = document.getElementById('username');
+const loginButton = document.getElementById('login-button');
 const questionElement = document.getElementById('question');
 const answersElement = document.getElementById('answers');
 const feedbackElement = document.getElementById('feedback');
 const scoreElement = document.getElementById('score');
 const timerElement = document.getElementById('timer');
 const nextButton = document.getElementById('next-button');
+const leaderboardElement = document.getElementById('leaderboard');
+const continueButton = document.getElementById('continue-button');
 
 const questions = [
     {
@@ -32,6 +38,17 @@ let score = 0;
 let timer;
 let timeLeft = 10;
 let questionAnswered = false;
+let username = '';
+let leaderboard = [];
+
+loginButton.addEventListener('click', () => {
+    username = usernameInput.value;
+    if (username) {
+        loginContainer.classList.add('hidden');
+        quizContainer.classList.remove('hidden');
+        showQuestion();
+    }
+});
 
 function showQuestion() {
     const currentQuestion = questions[currentQuestionIndex];
@@ -68,6 +85,7 @@ function selectAnswer(answer) {
     }
     nextButton.classList.remove('hidden');
     clearInterval(timer);
+    updateLeaderboard();
 }
 
 function updateScore() {
@@ -86,8 +104,17 @@ function startTimer() {
             feedbackElement.textContent = 'Time\'s up!';
             nextButton.classList.remove('hidden');
             questionAnswered = true;
+            updateLeaderboard();
         }
     }, 1000);
+}
+
+function updateLeaderboard() {
+    leaderboard.push({ username, score });
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboardElement.innerHTML = leaderboard.map(entry => `<div>${entry.username}: ${entry.score}</div>`).join('');
+    quizContainer.classList.add('hidden');
+    leaderboardContainer.classList.remove('hidden');
 }
 
 nextButton.addEventListener('click', () => {
@@ -106,6 +133,13 @@ nextButton.addEventListener('click', () => {
             nextButton.classList.remove('hidden');
         }
     }
+});
+
+continueButton.addEventListener('click', () => {
+    leaderboardContainer.classList.add('hidden');
+    quizContainer.classList.remove('hidden');
+    nextButton.classList.add('hidden');
+    showQuestion();
 });
 
 function resetGame() {
